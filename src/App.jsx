@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-
+import Todos from './components/Todos';
+import TodoForm from './components/TodoForm';
 function App() {
   const [todos, setTodos] = useState([
     {
@@ -18,18 +19,55 @@ function App() {
       completed: false,
     },
   ])
+  
+  
+  const toggleCompleted = (todoId) => {
+    const updatedTodos = todos.map((todo) => {
+      if (todo.id === todoId) {
+        todo.completed = !todo.completed
+      }
+      return todo
+    })
+    setTodos(updatedTodos)
+  }
+  const deleteTodo = (id) => {
+    const updatedTodos = todos.filter(todo => todo.id !== id);
+    setTodos(updatedTodos);
+  };
+ 
+  const addTodo = (todoTitle) => {
+    if (todoTitle === '') {
+      return
+    }
 
-  console.log(todos)
+    const newTodo = {
+      id: todos.length + 1,
+      title: todoTitle,
+      completed: false,
+    }
 
+    const updatedTodos = todos.concat(newTodo)
+    setTodos(updatedTodos)
+  }
   return (
-    <div>
-      <h1>My Todo List</h1>
-      {/* Gunakan method map di sini */}
-      {todos.map((todo) => {
-        return <p key={todo.id}>{todo.title}</p>
-      })}
+    <div style={styles.container}>
+      <h1 style={styles.title}>My Todo List</h1>
+      {/* Teruskan function toggleCompleted ke component Todos */}
+      <TodoForm addTodo={addTodo} /> 
+      <Todos todos={todos} toggleCompleted={toggleCompleted} deleteTodo={deleteTodo} />
+      
     </div>
   )
+}
+
+const styles = {
+  container: {
+    textAlign: 'center',
+    padding: '12px',
+  },
+  title: {
+    fontSize: '36px',
+  },
 }
 
 export default App
